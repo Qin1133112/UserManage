@@ -35,7 +35,7 @@ public class ConnUtil {
 	 * 获取数据库连接对象
 	 * @return conn
 	 */
-	public static Connection getConn(){
+	public Connection getConn(){
 		Connection conn=ConnUtil.conn();
 		return conn;
 	}

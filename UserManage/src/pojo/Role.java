@@ -9,7 +9,7 @@ public class Role {
 		return userId;
 	}
 	public void setUserId(int userId) {
-		this.userId = u.getUserId();
+		this.userId=userId;
 	}
 	public User getU() {
 		return u;
