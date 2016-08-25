@@ -1,6 +1,6 @@
-package control;
+package service;
 
-import model.PowerDao;
+import dao.PowerDao;
 import pojo.Power;
 
 public class PowService {

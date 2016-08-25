@@ -5,10 +5,10 @@ import java.util.Scanner;
 import pojo.Power;
 import pojo.Role;
 import pojo.User;
+import service.PowService;
+import service.RoleService;
+import service.UserService;
 import utils.CheckUtils;
-import control.PowService;
-import control.RoleService;
-import control.UserService;
 
 public class Action {
 	/**

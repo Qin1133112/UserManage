@@ -1,6 +1,6 @@
-package control;
+package service;
 
-import model.UserDao;
+import dao.UserDao;
 import pojo.User;
 
 public class UserService {

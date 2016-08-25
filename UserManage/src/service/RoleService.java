@@ -1,6 +1,6 @@
-package control;
+package service;
 
-import model.RoleDao;
+import dao.RoleDao;
 import pojo.Role;
 
 public class RoleService {
