@@ -5,8 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Scanner;
 
 import pojo.User;
+import utils.CheckUtils;
 import utils.ConnUtil;
 import utils.Max_Id;
 
@@ -14,8 +16,38 @@ public class UserDao {
 	
 	public ConnUtil connUtil=new ConnUtil();
 	public Connection conn;
+	Scanner sc=new Scanner(System.in);
 	Max_Id mx=new Max_Id();
+	CheckUtils check=new CheckUtils();
 	
+	/**
+	 * 用户查询个人信息
+	 * @param u
+	 * @return
+	 */
+	public boolean selectInfo(User u){
+		boolean flag=false;
+		conn=connUtil.getConn();
+		String userName=u.getUserName();
+		String sql="select userid,username,pwd,email from userinfo where userName=?";
+		try {
+			PreparedStatement ps=conn.prepareStatement(sql);
+			ps.setString(1, userName);
+			ResultSet rs=ps.executeQuery();
+			while(rs.next()){
+				System.out.println("用户id:"+rs.getInt("userid"));
+				System.out.println("用户名:"+rs.getString("username"));
+				System.out.println("用户密码:"+rs.getString("pwd"));
+				System.out.println("用户邮箱:"+rs.getString("email"));
+				System.out.println("***********************************");
+			}
+			conn.commit();
+			flag=true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return flag;
+	}
 	/**
 	 * 增加普通用户
 	 * @param u
@@ -42,7 +74,7 @@ public class UserDao {
 		return flag;
 	}
 	/**
-	 * 根据用户ID查询用户信息
+	 * 管理员根据用户ID查询用户信息
 	 * @param u
 	 * @return
 	 */
@@ -68,7 +100,7 @@ public class UserDao {
 		return flag;
 	}
 	/**
-	 * 根据用户ID模糊查询用户信息
+	 * 管理员根据用户ID模糊查询用户信息
 	 * @param u
 	 * @return
 	 */
@@ -96,7 +128,7 @@ public class UserDao {
 		return flag;
 	}
 	/**
-	 * 根据用户名查询用户信息
+	 * 管理员根据用户名查询用户信息
 	 * @param u
 	 * @return
 	 */
@@ -122,7 +154,7 @@ public class UserDao {
 		return flag;
 	}
 	/**
-	 * 根据用户名模糊查询用户信息
+	 * 管理员根据用户名模糊查询用户信息
 	 * @param u
 	 * @return
 	 */
@@ -149,7 +181,7 @@ public class UserDao {
 		return flag;
 	}
 	/**
-	 * 查询全部用户信息
+	 * 管理员查询全部用户信息
 	 * @param u
 	 * @return 
 	 */
@@ -175,21 +207,103 @@ public class UserDao {
 		return flag;
 	}
 	
-	
+	/**
+	 * 普通用户更新自己的信息
+	 * @param u
+	 * @return
+	 */
 	public boolean updateByUser(User u){
 		boolean flag=false;
 		conn=connUtil.getConn();
-		int userId=u.getUserId();
-		String sql="update userinfo set username=? and pwd=? and email=? where userid=userId";
-		try {
-			PreparedStatement ps=conn.prepareStatement(sql);
-			ps.execute();
-			conn.commit();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		String user=u.getUserName();
+		System.out.println(user);
+		System.out.println("输入更改的用户名：");
+		String userName=sc.next();
+		System.out.println("输入新密码：");
+		String pwd=sc.next();
+		System.out.println("重新确认密码：");
+		String pwd1=sc.next();
 		
+		String sql="update userinfo set username=?,pwd=?,email=? where username=user";
+		if(pwd.equals(pwd1)){
+			System.out.println("输入邮箱地址：");
+			String email=sc.next();
+			if(check.checkEmail(email)){
+				try {
+					PreparedStatement ps=conn.prepareStatement(sql);
+					ps.setString(1, userName);
+					ps.setString(2, pwd);
+					ps.setString(3, email);
+					ps.execute();
+					conn.commit();
+					System.out.println("修改成功");
+					flag=true;
+				} catch (SQLException e) {
+					System.out.println("更新错误");
+					e.printStackTrace();
+				}
+			}
+			
+		}else{
+			System.out.println("两次密码输入不正确，请重新操作！");
+		}
+		return flag;
+	}
+	/**
+	 * 管理员根据用户id对用户进行更改
+	 * @param u
+	 * @return
+	 */
+	public boolean updateById(User u){
+		boolean flag=false;
+		conn=connUtil.getConn();
+		System.out.println("输入要修改的用户ID：");
+		int id=sc.nextInt();
+//		String sql="select userid from userinfo";
+//		try {
+//			PreparedStatement ps=conn.prepareStatement(sql);
+//			ResultSet rs=ps.executeQuery();
+//			while(rs.next()){
+//				if(rs.getInt("userid").equals(id)){
+//					
+//					//System.out.println("验证通过");
+//				}
+//			}
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+		
+		System.out.println("输入更改的用户名：");
+		String userName=sc.next();
+		System.out.println("输入新密码：");
+		String pwd=sc.next();
+		System.out.println("重新确认密码：");
+		String pwd1=sc.next();
+		
+		String sql1="update userinfo set username=?,pwd=?,email=? where userid=?";
+		if(pwd.equals(pwd1)){
+			System.out.println("输入邮箱地址：");
+			String email=sc.next();
+			if(check.checkEmail(email)){
+				try {
+					PreparedStatement ps=conn.prepareStatement(sql1);
+					ps.setString(1, userName);
+					ps.setString(2, pwd);
+					ps.setString(3, email);
+					ps.setInt(4, id);
+					ps.execute();
+					conn.commit();
+					System.out.println("修改成功");
+					flag=true;
+				} catch (SQLException e) {
+					System.out.println("更新错误");
+					e.printStackTrace();
+				}
+			}
+			
+		}else{
+			System.out.println("两次密码输入不正确，请重新操作！");
+		}
 		return flag;
 	}
 

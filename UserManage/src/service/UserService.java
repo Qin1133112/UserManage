@@ -6,6 +6,16 @@ import pojo.User;
 public class UserService {
 	UserDao userDao=new UserDao();
 	
+	
+	/**
+	 * 用户查询个人信息
+	 * @param u
+	 * @return
+	 */
+	public boolean selectInfo(User u){
+		return userDao.selectInfo(u);
+	}
+	
 	/**
 	 * 增加用户
 	 * @param u
@@ -55,5 +65,13 @@ public class UserService {
 	 */
 	public boolean selectUserAll(User u){
 		return userDao.selectUserAll(u);
+	}
+	/**
+	 * 普通用户更新自己的信息
+	 * @param u
+	 * @return
+	 */
+	public boolean updateByUser(User u){
+		return userDao.updateByUser(u);
 	}
 }
