@@ -5,6 +5,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+ * 查询用户ID最大值工具
+ * @author QinGuangrui
+ *
+ */
 public class Max_Id {
 	
 	public ConnUtil connUtil=new ConnUtil();

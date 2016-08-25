@@ -12,6 +12,12 @@ import utils.CheckUtils;
 import utils.ConnUtil;
 import utils.Max_Id;
 
+
+/**
+ * 用户管理
+ * @author QinGuangrui
+ *
+ */
 public class UserDao {
 	
 	public ConnUtil connUtil=new ConnUtil();
@@ -259,50 +265,51 @@ public class UserDao {
 		conn=connUtil.getConn();
 		System.out.println("输入要修改的用户ID：");
 		int id=sc.nextInt();
-//		String sql="select userid from userinfo";
-//		try {
-//			PreparedStatement ps=conn.prepareStatement(sql);
-//			ResultSet rs=ps.executeQuery();
-//			while(rs.next()){
-//				if(rs.getInt("userid").equals(id)){
-//					
-//					//System.out.println("验证通过");
-//				}
-//			}
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-		
-		System.out.println("输入更改的用户名：");
-		String userName=sc.next();
-		System.out.println("输入新密码：");
-		String pwd=sc.next();
-		System.out.println("重新确认密码：");
-		String pwd1=sc.next();
-		
-		String sql1="update userinfo set username=?,pwd=?,email=? where userid=?";
-		if(pwd.equals(pwd1)){
-			System.out.println("输入邮箱地址：");
-			String email=sc.next();
-			if(check.checkEmail(email)){
-				try {
-					PreparedStatement ps=conn.prepareStatement(sql1);
-					ps.setString(1, userName);
-					ps.setString(2, pwd);
-					ps.setString(3, email);
-					ps.setInt(4, id);
-					ps.execute();
-					conn.commit();
-					System.out.println("修改成功");
-					flag=true;
-				} catch (SQLException e) {
-					System.out.println("更新错误");
-					e.printStackTrace();
+		String sql="select userid from userinfo";
+		try {
+			PreparedStatement ps=conn.prepareStatement(sql);
+			ResultSet rs=ps.executeQuery();
+			while(rs.next()){
+				if(rs.getInt("userid")==id ){				//判断有没有用户
+					System.out.println("输入更改的用户名：");
+					String userName=sc.next();
+					System.out.println("输入新密码：");
+					String pwd=sc.next();
+					System.out.println("重新确认密码：");
+					String pwd1=sc.next();
+					
+					String sql1="update userinfo set username=?,pwd=?,email=? where userid=?";
+					if(pwd.equals(pwd1)){
+						System.out.println("输入邮箱地址：");
+						String email=sc.next();
+						if(check.checkEmail(email)){
+							PreparedStatement ps1=conn.prepareStatement(sql1);
+							ps1.setString(1, userName);
+							ps1.setString(2, pwd);
+							ps1.setString(3, email);
+							ps1.setInt(4, id);
+							ps1.execute();
+							System.out.println("修改成功");
+							String sql2="update pow set pow=? where userid=?";
+							System.out.println("修改用户权限为1或2：");
+							String pow=sc.next();
+							PreparedStatement ps2=conn.prepareStatement(sql2);
+							ps2.setString(1, pow);
+							ps2.setInt(2, id);
+							ps2.execute();
+							conn.commit();
+							flag=true;
+						}
+						
+					}else{
+						System.out.println("两次密码输入不正确，请重新操作！");
+					}
+				}else{
+					System.out.println("没有此用户");
 				}
 			}
-			
-		}else{
-			System.out.println("两次密码输入不正确，请重新操作！");
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 		return flag;
 	}

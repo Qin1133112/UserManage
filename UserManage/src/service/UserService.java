@@ -74,4 +74,13 @@ public class UserService {
 	public boolean updateByUser(User u){
 		return userDao.updateByUser(u);
 	}
+	
+	/**
+	 * 管理员根据用户id对用户进行更改
+	 * @param u
+	 * @return
+	 */
+	public boolean updateById(User u){
+		return userDao.updateById(u);
+	}
 }

@@ -7,6 +7,11 @@ import pojo.Role;
 import utils.ConnUtil;
 import utils.Max_Id;
 
+/**
+ * ½ÇÉ«¹ÜÀí
+ * @author QinGuangrui
+ *
+ */
 public class RoleDao {
 	
 	private Role role;

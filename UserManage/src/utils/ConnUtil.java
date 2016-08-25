@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 /**
  * 数据库连接工具类
- * @author Admin
+ *@author QinGuangrui
  *
  */
 

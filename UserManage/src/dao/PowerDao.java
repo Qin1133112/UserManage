@@ -8,6 +8,12 @@ import pojo.Power;
 import utils.ConnUtil;
 import utils.Max_Id;
 
+/**
+ * 权限管理
+ * @author QinGuangrui
+ *
+ */
+
 public class PowerDao {
 	public ConnUtil connUtil=new ConnUtil();
 	public Connection conn;

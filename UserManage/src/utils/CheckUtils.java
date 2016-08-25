@@ -3,6 +3,11 @@ package utils;
 import pojo.Role;
 import pojo.User;
 
+/**
+ * 检查工具类
+ * @author QinGuangrui
+ *
+ */
 public class CheckUtils {
 	
 	/**
