@@ -19,7 +19,7 @@ import action.RegisteAction;
 
 public class IndexAction {
 	static Scanner sc=new Scanner(System.in);
-	static RegisteAction action=new RegisteAction();
+	static RegisteAction registeAction=new RegisteAction();
 	static LoginAction login=new LoginAction();
 	static SelectAction select=new SelectAction();
 	static User u=new User();
@@ -36,13 +36,16 @@ public class IndexAction {
 		System.out.println("1:用户登录");
 		System.out.println("2.退出系统");
 		System.out.println("***********************************");
-		int i=sc.nextInt();
+		String i=sc.next();
 		int userId=0;
 		switch(i){
-			case 1: userId=login.login(u);
+			case "1": userId=login.login(u);
 				break;
-			case 2: System.exit(0);
+			case "2": System.exit(0);
 				break;
+			default:
+				System.out.println("输入有误，请重新输入！");
+				index();
 		}
 		afterLogin(userId);
 	}
@@ -93,11 +96,13 @@ public class IndexAction {
 					selectIndex(role);
 					break;
 				case 2:
+					us.updateById(u);
 					break;
 				case 3:
+					us.deleteById(u);
 					break;
 				case 4:
-					action.register();
+					registeAction.register();
 					break;
 				case 5:index();
 					flag=false;

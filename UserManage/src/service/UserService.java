@@ -39,7 +39,7 @@ public class UserService {
 	 * @param u
 	 * @return
 	 */
-	public boolean selectUserId(User u){
+	public boolean selectUserByIds(User u){
 		return userDao.selectUserByIds(u);
 	}
 	/**
@@ -48,6 +48,7 @@ public class UserService {
 	 * @return
 	 */
 	public boolean selectUserByName(User u){
+		System.out.println("us"+u.getUserName());
 		return userDao.selectUserByName(u);
 	}
 	/**
@@ -82,5 +83,13 @@ public class UserService {
 	 */
 	public boolean updateById(User u){
 		return userDao.updateById(u);
+	}
+	/**
+	 * 管理员通过用户ID号删除用户的信息
+	 * @param u
+	 * @return
+	 */
+	public boolean deleteById(User u){
+		return userDao.deleteById(u);
 	}
 }

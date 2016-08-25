@@ -55,7 +55,7 @@ public class UserDao {
 		return flag;
 	}
 	/**
-	 * 增加普通用户
+	 * 增加用户
 	 * @param u
 	 * @return flag
 	 */
@@ -97,6 +97,7 @@ public class UserDao {
 				System.out.println("用户名:"+rs.getString("username"));
 				System.out.println("用户密码:"+rs.getString("pwd"));
 				System.out.println("用户邮箱:"+rs.getString("email"));
+				System.out.println("************************");
 			}
 			conn.commit();
 			flag=true;
@@ -113,11 +114,15 @@ public class UserDao {
 	public boolean selectUserByIds(User u){
 		boolean flag=false;
 		conn=connUtil.getConn();
-		String sql="select userid,username,pwd,email from userinfo where userid like '%?%'";
+//		System.out.println("输入id相关字段：");
+//		int userid=sc.nextInt();
+		
+		int id=u.getUserId();
+		String sql="select userid,username,pwd,email from userinfo where userid like %?%";
 		try {
 			PreparedStatement ps=conn.prepareStatement(sql);
-			ps.setInt(1, u.getUserId());
-			ResultSet rs=ps.executeQuery();
+			ps.setInt(1,id);
+			ResultSet rs=ps.executeQuery(sql);
 			while(rs.next()){
 				System.out.println("用户id:"+rs.getInt("userid"));
 				System.out.println("用户名:"+rs.getString("username"));
@@ -167,10 +172,11 @@ public class UserDao {
 	public boolean selectUserByNames(User u){
 		boolean flag=false;
 		conn=connUtil.getConn();
-		String sql="select userid,username,pwd,email from userinfo where userName like '%?%'";
+		System.out.println(u.getUserName());
+		String sql="select userid,username,pwd,email from userinfo where userName like ?";
 		try {
 			PreparedStatement ps=conn.prepareStatement(sql);
-			ps.setString(1, u.getUserName());
+			ps.setString(1, "%"+u.getUserName()+"%");
 			ResultSet rs=ps.executeQuery();
 			while(rs.next()){
 				System.out.println("用户id:"+rs.getInt("userid"));
@@ -304,13 +310,47 @@ public class UserDao {
 					}else{
 						System.out.println("两次密码输入不正确，请重新操作！");
 					}
-				}else{
-					System.out.println("没有此用户");
 				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return flag;
+	}
+	/**
+	 * 管理员通过用户ID号删除用户的信息
+	 * @param u
+	 * @return
+	 */
+	public boolean deleteById(User u){
+		boolean flag=false;
+		boolean b=true;
+		conn=connUtil.getConn();
+		while(b){
+			System.out.println("输入要删除的用户ID号：");
+			int id=sc.nextInt();
+			if(id==u.getUserId()){
+				b=false;
+				System.out.println("当前用户无法删除，请重新输入ID!");
+			}else{
+				String sql="delete from userinfo where userid=?";
+				try {
+					PreparedStatement ps=conn.prepareStatement(sql);
+					ps.execute();
+					String sql1="delete from pow where userid=?";
+					PreparedStatement ps1=conn.prepareStatement(sql1);
+					ps1.execute();
+					String sql2="delete from u_role where userid=?";
+					PreparedStatement ps2=conn.prepareStatement(sql2);
+					ps2.execute();
+					conn.commit();
+					flag=true;
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				
+			}
+		}		
 		return flag;
 	}
 
