@@ -3,6 +3,7 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+
 import pojo.Role;
 import utils.ConnUtil;
 import utils.Max_Id;
@@ -54,9 +55,17 @@ public class RoleDao {
 		return flag;
 	}
 	
-	
-	
-	
-	
-	
+	/**
+	 * É¾³ýÓÃ»§½ÇÉ«
+	 * @param id
+	 * @throws SQLException
+	 */
+	public void deleteRole(int id) throws SQLException {
+		conn=connUtil.getConn();
+		String sql="delete from u_role where userid=?";
+		PreparedStatement ps=conn.prepareStatement(sql);
+		ps.setInt(1,id);
+		ps.executeUpdate();
+	}
+
 }

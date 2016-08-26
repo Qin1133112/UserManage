@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.Scanner;
 
 import pojo.User;
+import service.PowService;
+import service.RoleService;
 import utils.CheckUtils;
 import utils.ConnUtil;
 import utils.Max_Id;
@@ -25,6 +27,8 @@ public class UserDao {
 	Scanner sc=new Scanner(System.in);
 	Max_Id mx=new Max_Id();
 	CheckUtils check=new CheckUtils();
+	PowService pows=new PowService();
+	RoleService rs=new RoleService();
 	
 	/**
 	 * 用户查询个人信息
@@ -118,11 +122,13 @@ public class UserDao {
 //		int userid=sc.nextInt();
 		
 		int id=u.getUserId();
-		String sql="select userid,username,pwd,email from userinfo where userid like %?%";
+		
+		String sql="select userid,username,pwd,email from userinfo where userid like '%?%'";
 		try {
 			PreparedStatement ps=conn.prepareStatement(sql);
 			ps.setInt(1,id);
-			ResultSet rs=ps.executeQuery(sql);
+			ps.execute();
+			ResultSet rs=ps.getResultSet();
 			while(rs.next()){
 				System.out.println("用户id:"+rs.getInt("userid"));
 				System.out.println("用户名:"+rs.getString("username"));
@@ -200,7 +206,7 @@ public class UserDao {
 	public boolean selectUserAll(User u){
 		boolean flag=false;
 		conn=connUtil.getConn();
-		String sql="select userid,username,pwd,email from userinfo";
+		String sql="select u.userid userid,username,pwd,email,pow,rolename from userinfo u,pow p,u_role r where u.userid=p.userid and p.userid=r.userid";
 		try {
 			PreparedStatement ps=conn.prepareStatement(sql);
 			ResultSet rs=ps.executeQuery();
@@ -209,6 +215,8 @@ public class UserDao {
 				System.out.println("用户名:"+rs.getString("username"));
 				System.out.println("用户密码:"+rs.getString("pwd"));
 				System.out.println("用户邮箱:"+rs.getString("email"));
+				System.out.println("用户权限值："+rs.getString("pow"));
+				System.out.println("用户角色："+rs.getString("rolename"));
 				System.out.println("************************************");
 			}
 			conn.commit();
@@ -296,13 +304,7 @@ public class UserDao {
 							ps1.setInt(4, id);
 							ps1.execute();
 							System.out.println("修改成功");
-							String sql2="update pow set pow=? where userid=?";
-							System.out.println("修改用户权限为1或2：");
-							String pow=sc.next();
-							PreparedStatement ps2=conn.prepareStatement(sql2);
-							ps2.setString(1, pow);
-							ps2.setInt(2, id);
-							ps2.execute();
+							pows.updatePow(id);								//根据输入的id更新权限
 							conn.commit();
 							flag=true;
 						}
@@ -313,10 +315,19 @@ public class UserDao {
 				}
 			}
 		} catch (SQLException e) {
+			System.out.println("更新失败，请重新操作！");
+			try {
+				conn.rollback();
+				updateById(u);
+			} catch (SQLException e1) {
+
+				//e1.printStackTrace();
+			}
 			e.printStackTrace();
 		}
 		return flag;
 	}
+	
 	/**
 	 * 管理员通过用户ID号删除用户的信息
 	 * @param u
@@ -324,34 +335,57 @@ public class UserDao {
 	 */
 	public boolean deleteById(User u){
 		boolean flag=false;
-		boolean b=true;
+		boolean b=true;								//判断是否进入循环
 		conn=connUtil.getConn();
 		while(b){
 			System.out.println("输入要删除的用户ID号：");
 			int id=sc.nextInt();
 			if(id==u.getUserId()){
-				b=false;
 				System.out.println("当前用户无法删除，请重新输入ID!");
 			}else{
-				String sql="delete from userinfo where userid=?";
+				String sql1="select userid from userinfo where userid=?";
 				try {
-					PreparedStatement ps=conn.prepareStatement(sql);
-					ps.execute();
-					String sql1="delete from pow where userid=?";
 					PreparedStatement ps1=conn.prepareStatement(sql1);
+					ps1.setInt(1, id);
 					ps1.execute();
-					String sql2="delete from u_role where userid=?";
-					PreparedStatement ps2=conn.prepareStatement(sql2);
-					ps2.execute();
-					conn.commit();
-					flag=true;
-				} catch (SQLException e) {
-					e.printStackTrace();
+					ResultSet rs1=ps1.getResultSet();
+					if(!rs1.next()){
+						String sql="delete from userinfo where userid=?";
+						try {
+							PreparedStatement ps=conn.prepareStatement(sql);
+							ps.setInt(1,id);
+							ps.executeUpdate();
+							pows.deletePow(id);													//根据userid删除用户权限					
+							rs.deleteRole(id);													//根据userid删除用户角色
+							conn.commit();
+							System.out.println("删除用户"+id+"成功");
+							System.out.println("继续删除请输入1，否则任意键继续：");
+							String a=sc.next();
+							if(!a.equals("1")){
+								b=false;
+							}
+							flag=true;
+						} catch (SQLException e) {
+							System.out.println("删除过程出错,请重新操作！");
+							try {
+								conn.rollback();
+								deleteById(u);
+							} catch (SQLException e1) {
+								//e1.printStackTrace();
+							}
+						}
+					}else{
+						System.out.println("用户不存在，请重新操作！");
+						deleteById(u);
+					}
+					
+				} catch (SQLException e2) {
+					System.out.println("输入有误！");
+					deleteById(u);
 				}
-				
+	
 			}
 		}		
 		return flag;
 	}
-
 }

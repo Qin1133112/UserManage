@@ -19,6 +19,8 @@ public class LoginAction {
 	Scanner sc=new Scanner(System.in);
 	ConnUtil connUtil=new ConnUtil();
 	Connection conn=connUtil.getConn();
+	RegisteAction ra=new RegisteAction();
+	IndexAction ia=new IndexAction();
 	/**
 	 * 用户登录
 	 * @param u
@@ -32,18 +34,35 @@ public class LoginAction {
 		System.out.println("输入密码：");
 		String pwd=sc.next();
 		u.setPwd(pwd);
-		String sql="select userid,username,pwd from userinfo";
+		String sql="select userid,username,pwd from userinfo where username=? and pwd=?";
 		try {
 			PreparedStatement ps=conn.prepareStatement(sql);
+			ps.setString(1, userName);
+			ps.setString(2, pwd);
 			ResultSet rs=ps.executeQuery();
-			while(rs.next()){
-				if(rs.getString("username").equals(u.getUserName()) && rs.getString("pwd").equals(u.getPwd())){
-					userId=rs.getInt("userid");
-					//System.out.println("验证通过");
-				}
+			if(rs.next()){
+				userId=rs.getInt("userid");
+		}else{
+			System.out.println("改用户不存在!请先注册或者退出！");
+			System.out.println("1.注册");
+			System.out.println("2.返回上一级");
+			String n=sc.next();
+			switch(n){
+				case "1":
+					ra.register();
+					break;
+				case "2":
+					ia.index();
+					break;
+				default:
+					System.exit(0);
+					break;
 			}
+			
+		}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			//login(u);
+			//e.printStackTrace();
 		}
 		return userId;
 	}

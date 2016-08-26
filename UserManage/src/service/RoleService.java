@@ -1,5 +1,7 @@
 package service;
 
+import java.sql.SQLException;
+
 import dao.RoleDao;
 import pojo.Role;
 
@@ -19,5 +21,13 @@ public class RoleService {
 	 */
 	public boolean addRole(Role r){
 		return roleDao.addRole(r);
+	}
+	/**
+	 * É¾³ýÓÃ»§½ÇÉ«
+	 * @param id
+	 * @throws SQLException
+	 */
+	public void deleteRole(int id) throws SQLException {
+		roleDao.deleteRole(id);
 	}
 }

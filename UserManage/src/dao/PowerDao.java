@@ -3,6 +3,7 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Scanner;
 
 import pojo.Power;
 import utils.ConnUtil;
@@ -18,7 +19,7 @@ public class PowerDao {
 	public ConnUtil connUtil=new ConnUtil();
 	public Connection conn;
 	Max_Id mx=new Max_Id();
-	
+	Scanner sc=new Scanner(System.in);
 	/**
 	 * 增加用户权限
 	 * @param u
@@ -44,5 +45,32 @@ public class PowerDao {
 			}
 
 		return flag;
+	}
+	/**
+	 * 删除用户权限
+	 * @param id
+	 * @throws SQLException
+	 */
+	public void deletePow(int id) throws SQLException {
+		conn=connUtil.getConn();
+		String sql="delete from pow where userid=?";
+		PreparedStatement ps=conn.prepareStatement(sql);
+		ps.setInt(1,id);
+		ps.executeUpdate();
+	}
+	/**
+	 * 根据用户id更新用户权限
+	 * @param id
+	 * @throws SQLException
+	 */
+	public void updatePow(int id) throws SQLException {
+		conn=connUtil.getConn();
+		String sql="update pow set pow=? where userid=?";
+		System.out.println("修改用户权限为1或2：");
+		String pow=sc.next();
+		PreparedStatement ps=conn.prepareStatement(sql);
+		ps.setString(1, pow);
+		ps.setInt(2, id);
+		ps.execute();
 	}
 }

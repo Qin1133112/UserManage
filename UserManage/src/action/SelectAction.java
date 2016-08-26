@@ -42,7 +42,6 @@ public class SelectAction {
 		System.out.println("输入用户名：");
 		String userName=sc.next();
 		u.setUserName(userName);
-		//System.out.println("u.getuUserName="+u.getUserName());
 		us.selectUserByName(u);
 	}
 	
@@ -53,7 +52,6 @@ public class SelectAction {
 		System.out.println("输入用户名相关字段：");
 		String userName=sc.next();
 		u.setUserName(userName);
-		System.out.println("u.getuUserName="+u.getUserName());
 		us.selectUserByNames(u);
 	}
 	/**

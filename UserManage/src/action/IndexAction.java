@@ -25,29 +25,35 @@ public class IndexAction {
 	static User u=new User();
 	static UserService us=new UserService();
 	public static ConnUtil connUtil=new ConnUtil();
-	public static Connection conn;
+	public static Connection conn=connUtil.getConn();
 /**
  * 欢迎页面
  */
 	public void index() {
-		conn=connUtil.getConn();
-		System.out.println("=======欢迎使用用户管理系统=======");
+		
+		System.out.println("========欢迎使用用户管理系统========");
 		System.out.println("请输入数字选择以下功能：");
-		System.out.println("1:用户登录");
-		System.out.println("2.退出系统");
-		System.out.println("***********************************");
+		System.out.println("1:老用户登录");
+		System.out.println("2:注册新用户");
+		System.out.println("3.退出系统");
+		System.out.println("==================================");
 		String i=sc.next();
 		int userId=0;
 		switch(i){
-			case "1": userId=login.login(u);
+			case "1": 
+				userId=login.login(u);
+				afterLogin(userId);
 				break;
-			case "2": System.exit(0);
+			case "2": 
+				registeAction.userRegister();
+				break;
+			case "3": 
+				System.exit(0);
 				break;
 			default:
 				System.out.println("输入有误，请重新输入！");
 				index();
 		}
-		afterLogin(userId);
 	}
 /**
  * 登录成功之后进行角色判断
@@ -64,7 +70,8 @@ public class IndexAction {
 				ResultSet rs=ps.executeQuery();
 				while(rs.next()){
 					role=rs.getString("rolename");
-					System.out.println("你是"+role);
+					System.out.println("你的角色是"+role);
+					System.out.println("==================================");
 					break;
 				}
 			} catch (SQLException e) {
@@ -82,14 +89,14 @@ public class IndexAction {
 	public  void loginIndex(String role) {
 		boolean flag=true;
 		while(flag){
-			System.out.println("请选择以下功能");
+			System.out.println("==========请选择以下功能============");
 			if(role.equals("admin")){
 				System.out.println("1.查询用户信息");
 				System.out.println("2.修改用户信息");
 				System.out.println("3.删除用户信息");
 				System.out.println("4.注册新用户");
 				System.out.println("5.退出当前登录");
-				System.out.println("**********************");
+				System.out.println("==================================");
 				int a=sc.nextInt();
 				switch(a){
 				case 1:
@@ -112,7 +119,7 @@ public class IndexAction {
 				System.out.println("1.查询用户信息");
 				System.out.println("2.修改用户信息");
 				System.out.println("3.退出当前登录");
-				System.out.println("**********************");
+				System.out.println("==================================");
 				int a=sc.nextInt();
 				switch(a){
 				case 1:
@@ -137,13 +144,14 @@ public class IndexAction {
 	public  void selectIndex(String role) {
 		boolean flag=true;
 		while(flag){
+			System.out.println("=========请选择以下功能=============");
 			System.out.println("1.查询全部用户信息");
 			System.out.println("2.根据用户ID查询用户信息");
 			System.out.println("3.根据用户ID模糊查询用户信息");
 			System.out.println("4.根据用户名查询用户信息");
 			System.out.println("5.根据用户名模糊查询用户信息");
 			System.out.println("6.退出查询");
-			System.out.println("**********************************");
+			System.out.println("==================================");
 			int b=sc.nextInt();
 			switch(b){
 			case 1: 
