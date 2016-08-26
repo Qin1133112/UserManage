@@ -1,7 +1,7 @@
 package service;
 
-import dao.UserDao;
 import pojo.User;
+import dao.UserDao;
 
 public class UserService {
 	UserDao userDao=new UserDao();

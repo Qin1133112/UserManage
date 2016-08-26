@@ -9,7 +9,6 @@ import java.util.Scanner;
 import pojo.User;
 import service.UserService;
 import utils.ConnUtil;
-import action.RegisteAction;
 
 /**
  * 进行页面布局和逻辑设计
@@ -26,9 +25,10 @@ public class IndexAction {
 	static UserService us=new UserService();
 	public static ConnUtil connUtil=new ConnUtil();
 	public static Connection conn=connUtil.getConn();
-/**
- * 欢迎页面
- */
+	/**
+	 * 欢迎页面
+	 * 
+	 */
 	public void index() {
 		
 		System.out.println("========欢迎使用用户管理系统========");
@@ -46,6 +46,17 @@ public class IndexAction {
 				break;
 			case "2": 
 				registeAction.userRegister();
+				System.out.println("==================================");
+				System.out.println("注册成功，请选择是否使用此系统？");
+				System.out.println("使用请按Y或y键");
+				System.out.println("不使用请按任意键退出");
+				System.out.println("==================================");
+				String str=sc.next();
+				if("Y".equals(str)	||	"y".equals(str)){
+					index();
+				}else{
+					System.exit(0);
+				}
 				break;
 			case "3": 
 				System.exit(0);
@@ -55,15 +66,15 @@ public class IndexAction {
 				index();
 		}
 	}
-/**
- * 登录成功之后进行角色判断
- * @param userId
- */
+	/**
+	 * 登录成功之后进行角色判断
+	 * @param userId
+	 */
 	public  void afterLogin(int userId) {
 		String role="";
 		if(userId!=0){
 			System.out.println("登录成功");
-			String sql="select rolename from u_role where userid=?";
+			String sql="select rolename from u_role where userid = ?";
 			try {
 				PreparedStatement ps=conn.prepareStatement(sql);
 				ps.setInt(1, userId);
@@ -75,17 +86,17 @@ public class IndexAction {
 					break;
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 			loginIndex(role);
 		}else{
 			index();
 		}
 	}
-/**
- * 角色判断后进行相关操作
- * @param role
- */
+	/**
+	 * 角色判断后进行相关操作
+	 * @param role
+	 */
 	public  void loginIndex(String role) {
 		boolean flag=true;
 		while(flag){
@@ -111,7 +122,9 @@ public class IndexAction {
 				case 4:
 					registeAction.register();
 					break;
-				case 5:index();
+				case 5:
+					u.setUserName(null);
+					index();
 					flag=false;
 					break;
 				}
@@ -138,9 +151,10 @@ public class IndexAction {
 		}
 		
 	}
-/**
- * 管理员的 查询操作
- */
+	/**
+	 * 管理员的 查询操作
+	 * 
+	 */
 	public  void selectIndex(String role) {
 		boolean flag=true;
 		while(flag){

@@ -78,7 +78,7 @@ public class RegisteAction {
 					}
 					
 				}else{
-					System.out.println("两次密码不一致");
+					System.out.println("两次密码不一致,请重新注册");
 					register();
 				}
 			}
@@ -142,8 +142,8 @@ public class RegisteAction {
 					}
 					
 				}else{
-					System.out.println("两次密码不一致");
-					register();
+					System.out.println("两次密码不一致，请重新注册");
+					userRegister();
 				}
 			}
 		} catch (SQLException e) {

@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Scanner;
 
 import pojo.User;
@@ -79,7 +78,8 @@ public class UserDao {
 			conn.commit();
 			flag=true;	
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println("注册失败");
+			//e.printStackTrace();
 		}
 		return flag;
 	}
@@ -91,7 +91,9 @@ public class UserDao {
 	public boolean selectUserById(User u){
 		boolean flag=false;
 		conn=connUtil.getConn();
-		String sql="select u.userid userid,username,pwd,email,pow,rolename from userinfo u,pow p,u_role r where u.userid=p.userid and p.userid=r.userid and u.userid=? ";
+		String sql="select u.userid userid,username,pwd,email,pow,rolename "
+						+ "from userinfo u,pow p,u_role r "
+						+ "where u.userid=p.userid and p.userid=r.userid and u.userid = ? ";
 		try {
 			PreparedStatement ps=conn.prepareStatement(sql);
 			ps.setInt(1, u.getUserId());
@@ -123,7 +125,9 @@ public class UserDao {
 		
 		int id=u.getUserId();
 		String userId="%"+id+"%";
-		String sql="select u.userid userid,username,pwd,email,pow,rolename from userinfo u,pow p,u_role r where u.userid=p.userid and p.userid=r.userid and u.userid like ? ";
+		String sql="select u.userid userid,username,pwd,email,pow,rolename "
+						+ "from userinfo u,pow p,u_role r "
+						+ "where u.userid=p.userid and p.userid=r.userid and u.userid like ? ";
 		try {
 			PreparedStatement ps=conn.prepareStatement(sql);
 			ps.setString(1,userId);
@@ -154,7 +158,9 @@ public class UserDao {
 	public boolean selectUserByName(User u){
 		boolean flag=false;
 		conn=connUtil.getConn();
-		String sql="select u.userid userid,username,pwd,email,pow,rolename from userinfo u ,pow p,u_role r where u.userid=p.userid and p.userid=r.userid and userName like ?";
+		String sql="select u.userid userid,username,pwd,email,pow,rolename "
+						+ "from userinfo u ,pow p,u_role r "
+						+ "where u.userid=p.userid and p.userid=r.userid and userName like ?";
 		try {
 			PreparedStatement ps=conn.prepareStatement(sql);
 			ps.setString(1, u.getUserName());
@@ -184,8 +190,9 @@ public class UserDao {
 	public boolean selectUserByNames(User u){
 		boolean flag=false;
 		conn=connUtil.getConn();
-		System.out.println(u.getUserName());
-		String sql="select u.userid userid,username,pwd,email,pow,rolename from userinfo u ,pow p,u_role r where u.userid=p.userid and p.userid=r.userid and userName like ?";
+		String sql="select u.userid userid,username,pwd,email,pow,rolename "
+						+ "from userinfo u ,pow p,u_role r "
+						+ "where u.userid=p.userid and p.userid=r.userid and userName like ?";
 		try {
 			PreparedStatement ps=conn.prepareStatement(sql);
 			ps.setString(1, "%"+u.getUserName()+"%");
@@ -254,7 +261,7 @@ public class UserDao {
 		System.out.println("重新确认密码：");
 		String pwd1=sc.next();
 		
-		String sql="update userinfo set username=?,pwd=?,email=? where username=user";
+		String sql="update userinfo set username=?,pwd=?,email=? where username = ?";
 		if(pwd.equals(pwd1)){
 			System.out.println("输入邮箱地址：");
 			String email=sc.next();
@@ -264,9 +271,11 @@ public class UserDao {
 					ps.setString(1, userName);
 					ps.setString(2, pwd);
 					ps.setString(3, email);
+					ps.setString(4, user);
 					ps.execute();
 					conn.commit();
 					System.out.println("修改成功");
+					u.setUserName(userName);
 					flag=true;
 				} catch (SQLException e) {
 					System.out.println("更新错误");
@@ -302,7 +311,7 @@ public class UserDao {
 					System.out.println("重新确认密码：");
 					String pwd1=sc.next();
 					
-					String sql1="update userinfo set username=?,pwd=?,email=? where userid=?";
+					String sql1="update userinfo set username=?,pwd=?,email=? where userid= ?";
 					if(pwd.equals(pwd1)){
 						System.out.println("输入邮箱地址：");
 						String email=sc.next();
@@ -345,7 +354,7 @@ public class UserDao {
 	 */
 	public boolean deleteById(User u){
 		boolean flag=false;
-		boolean b=true;								//判断是否进入循环
+		boolean b=true;																		//判断是否进入循环
 		conn=connUtil.getConn();
 		while(b){
 			System.out.println("输入要删除的用户ID号：");
@@ -353,14 +362,14 @@ public class UserDao {
 			if(id==u.getUserId()){
 				System.out.println("当前用户无法删除，请重新输入ID!");
 			}else{
-				String sql1="select userid from userinfo where userid=?";
+				String sql1="select userid from userinfo where userid = ?";
 				try {
 					PreparedStatement ps1=conn.prepareStatement(sql1);
 					ps1.setInt(1, id);
 					ps1.execute();
 					ResultSet rs1=ps1.getResultSet();
-					if(!rs1.next()){
-						String sql="delete from userinfo where userid=?";
+					if(rs1.next()){
+						String sql="delete from userinfo where userid = ?";
 						try {
 							PreparedStatement ps=conn.prepareStatement(sql);
 							ps.setInt(1,id);
@@ -368,7 +377,7 @@ public class UserDao {
 							pows.deletePow(id);													//根据userid删除用户权限					
 							rs.deleteRole(id);													//根据userid删除用户角色
 							conn.commit();
-							System.out.println("删除用户"+id+"成功");
+							System.out.println("删除用户" + id + "成功");
 							System.out.println("继续删除请输入1，否则任意键继续：");
 							String a=sc.next();
 							if(!a.equals("1")){

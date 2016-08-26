@@ -14,11 +14,11 @@ public class Max_Id {
 	
 	public ConnUtil connUtil=new ConnUtil();
 	public Connection conn=connUtil.getConn();
-	/**
-	 * 取出最大的PID值
-	 * @return n
-	 * @throws SQLException
-	 */
+		/**
+		 * 取出最大的PID值
+		 * @return n
+		 * @throws SQLException
+		 */
 		public int select_maxPowId() throws SQLException {
 			String sql="select max(pid) max from pow";
 			int n=0;
@@ -29,11 +29,11 @@ public class Max_Id {
 			}
 			return n;
 		}
-	/**
-	 * 取出最大的RID值
-	 * @return n
-	 * @throws SQLException
-	 */
+		/**
+		 * 取出最大的RID值
+		 * @return n
+		 * @throws SQLException
+		 */
 		public int select_maxRoleId() throws SQLException {
 			String sql="select max(rid) max from u_role";
 			int n=0;
@@ -45,11 +45,11 @@ public class Max_Id {
 			return n;
 		}
 		
-		/**
-		 * 取出最大的UserID值
-		 * @return n
-		 * @throws SQLException
-		 */
+			/**
+			 * 取出最大的UserID值
+			 * @return n
+			 * @throws SQLException
+			 */
 			public int select_maxUserId() throws SQLException {
 				String sql="select max(userid) userid from userInfo";
 				int n=0;

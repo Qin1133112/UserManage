@@ -34,7 +34,7 @@ public class LoginAction {
 		System.out.println(" ‰»Î√‹¬Î£∫");
 		String pwd=sc.next();
 		u.setPwd(pwd);
-		String sql="select userid,username,pwd from userinfo where username=? and pwd=?";
+		String sql="select userid,username,pwd from userinfo where username = ? and pwd = ?";
 		try {
 			PreparedStatement ps=conn.prepareStatement(sql);
 			ps.setString(1, userName);
@@ -49,7 +49,7 @@ public class LoginAction {
 			String n=sc.next();
 			switch(n){
 				case "1":
-					ra.register();
+					ra.userRegister();
 					break;
 				case "2":
 					ia.index();

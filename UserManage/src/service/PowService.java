@@ -2,8 +2,8 @@ package service;
 
 import java.sql.SQLException;
 
-import dao.PowerDao;
 import pojo.Power;
+import dao.PowerDao;
 
 public class PowService {
 	
