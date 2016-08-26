@@ -91,7 +91,7 @@ public class UserDao {
 	public boolean selectUserById(User u){
 		boolean flag=false;
 		conn=connUtil.getConn();
-		String sql="select userid,username,pwd,email from userinfo where userid=? ";
+		String sql="select u.userid userid,username,pwd,email,pow,rolename from userinfo u,pow p,u_role r where u.userid=p.userid and p.userid=r.userid and u.userid=? ";
 		try {
 			PreparedStatement ps=conn.prepareStatement(sql);
 			ps.setInt(1, u.getUserId());
@@ -101,6 +101,8 @@ public class UserDao {
 				System.out.println("用户名:"+rs.getString("username"));
 				System.out.println("用户密码:"+rs.getString("pwd"));
 				System.out.println("用户邮箱:"+rs.getString("email"));
+				System.out.println("用户权限值："+rs.getString("pow"));
+				System.out.println("用户角色："+rs.getString("rolename"));
 				System.out.println("************************");
 			}
 			conn.commit();
@@ -118,15 +120,13 @@ public class UserDao {
 	public boolean selectUserByIds(User u){
 		boolean flag=false;
 		conn=connUtil.getConn();
-//		System.out.println("输入id相关字段：");
-//		int userid=sc.nextInt();
 		
 		int id=u.getUserId();
-		
-		String sql="select userid,username,pwd,email from userinfo where userid like '%?%'";
+		String userId="%"+id+"%";
+		String sql="select u.userid userid,username,pwd,email,pow,rolename from userinfo u,pow p,u_role r where u.userid=p.userid and p.userid=r.userid and u.userid like ? ";
 		try {
 			PreparedStatement ps=conn.prepareStatement(sql);
-			ps.setInt(1,id);
+			ps.setString(1,userId);
 			ps.execute();
 			ResultSet rs=ps.getResultSet();
 			while(rs.next()){
@@ -134,13 +134,15 @@ public class UserDao {
 				System.out.println("用户名:"+rs.getString("username"));
 				System.out.println("用户密码:"+rs.getString("pwd"));
 				System.out.println("用户邮箱:"+rs.getString("email"));
+				System.out.println("用户权限值："+rs.getString("pow"));
+				System.out.println("用户角色："+rs.getString("rolename"));
 				System.out.println("************************");
 			}
 			conn.commit();
 			flag=true;
 		} catch (SQLException e) {
-			System.out.println("查询出错");
-			e.printStackTrace();
+			System.out.println("查询出错，请重新选择操作！");
+			//e.printStackTrace();
 		}
 		return flag;
 	}
@@ -152,7 +154,7 @@ public class UserDao {
 	public boolean selectUserByName(User u){
 		boolean flag=false;
 		conn=connUtil.getConn();
-		String sql="select userid,username,pwd,email from userinfo where userName=?";
+		String sql="select u.userid userid,username,pwd,email,pow,rolename from userinfo u ,pow p,u_role r where u.userid=p.userid and p.userid=r.userid and userName like ?";
 		try {
 			PreparedStatement ps=conn.prepareStatement(sql);
 			ps.setString(1, u.getUserName());
@@ -162,11 +164,15 @@ public class UserDao {
 				System.out.println("用户名:"+rs.getString("username"));
 				System.out.println("用户密码:"+rs.getString("pwd"));
 				System.out.println("用户邮箱:"+rs.getString("email"));
+				System.out.println("用户权限值："+rs.getString("pow"));
+				System.out.println("用户角色："+rs.getString("rolename"));
+				System.out.println("************************");
 			}
 			conn.commit();
 			flag=true;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println("查询出错，请重新选择操作！");
+			//e.printStackTrace();
 		}
 		return flag;
 	}
@@ -179,7 +185,7 @@ public class UserDao {
 		boolean flag=false;
 		conn=connUtil.getConn();
 		System.out.println(u.getUserName());
-		String sql="select userid,username,pwd,email from userinfo where userName like ?";
+		String sql="select u.userid userid,username,pwd,email,pow,rolename from userinfo u ,pow p,u_role r where u.userid=p.userid and p.userid=r.userid and userName like ?";
 		try {
 			PreparedStatement ps=conn.prepareStatement(sql);
 			ps.setString(1, "%"+u.getUserName()+"%");
@@ -189,12 +195,15 @@ public class UserDao {
 				System.out.println("用户名:"+rs.getString("username"));
 				System.out.println("用户密码:"+rs.getString("pwd"));
 				System.out.println("用户邮箱:"+rs.getString("email"));
+				System.out.println("用户权限值："+rs.getString("pow"));
+				System.out.println("用户角色："+rs.getString("rolename"));
 				System.out.println("************************");
 			}
 			conn.commit();
 			flag=true;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println("查询出错，请重新选择操作！");
+			//e.printStackTrace();
 		}
 		return flag;
 	}
@@ -222,7 +231,8 @@ public class UserDao {
 			conn.commit();
 			flag=true;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println("查询出错，请重新选择操作！");
+			//e.printStackTrace();
 		}
 		return flag;
 	}
@@ -304,7 +314,7 @@ public class UserDao {
 							ps1.setInt(4, id);
 							ps1.execute();
 							System.out.println("修改成功");
-							pows.updatePow(id);								//根据输入的id更新权限
+							pows.updatePow(id);																//根据输入的id更新权限
 							conn.commit();
 							flag=true;
 						}
@@ -323,7 +333,7 @@ public class UserDao {
 
 				//e1.printStackTrace();
 			}
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return flag;
 	}

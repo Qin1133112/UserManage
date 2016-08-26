@@ -48,7 +48,6 @@ public class UserService {
 	 * @return
 	 */
 	public boolean selectUserByName(User u){
-		System.out.println("us"+u.getUserName());
 		return userDao.selectUserByName(u);
 	}
 	/**
