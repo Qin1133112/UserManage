@@ -114,7 +114,7 @@ public class RegisteAction {
 			}
 			//对用户名存在与否进行相关操作
 			if(!b){
-				System.out.println("用户名以存在，请重新注册！");
+				System.out.println("用户名已存在，请重新注册！");
 				register();
 			}else{
 				System.out.println("输入密码：");
