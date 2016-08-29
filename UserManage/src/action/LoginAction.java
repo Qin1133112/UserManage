@@ -46,6 +46,7 @@ public class LoginAction {
 			System.out.println("改用户不存在!请先注册或者退出！");
 			System.out.println("1.注册");
 			System.out.println("2.返回上一级");
+			System.out.println("任意键将退出系统");
 			String n=sc.next();
 			switch(n){
 				case "1":

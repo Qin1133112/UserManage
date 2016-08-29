@@ -222,7 +222,9 @@ public class UserDao {
 	public boolean selectUserAll(User u){
 		boolean flag=false;
 		conn=connUtil.getConn();
-		String sql="select u.userid userid,username,pwd,email,pow,rolename from userinfo u,pow p,u_role r where u.userid=p.userid and p.userid=r.userid";
+		String sql="select u.userid userid,username,pwd,email,pow,rolename "
+				+ "from userinfo u,pow p,u_role r "
+				+ "where u.userid=p.userid and p.userid=r.userid";
 		try {
 			PreparedStatement ps=conn.prepareStatement(sql);
 			ResultSet rs=ps.executeQuery();
@@ -378,10 +380,11 @@ public class UserDao {
 							rs.deleteRole(id);													//根据userid删除用户角色
 							conn.commit();
 							System.out.println("删除用户" + id + "成功");
-							System.out.println("继续删除请输入1，否则任意键继续：");
+							System.out.println("继续删除请输入1，否则任意键返回上一级");
 							String a=sc.next();
 							if(!a.equals("1")){
 								b=false;
+								
 							}
 							flag=true;
 						} catch (SQLException e) {
