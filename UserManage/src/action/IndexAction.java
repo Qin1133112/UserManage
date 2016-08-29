@@ -61,7 +61,7 @@ public class IndexAction {
 			case "3": 
 				System.exit(0);
 				break;
-			default:
+			default: 
 				System.out.println("输入有误，请重新输入！");
 				index();
 		}
