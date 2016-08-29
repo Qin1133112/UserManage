@@ -45,19 +45,19 @@ public class CheckUtils {
 			System.out.println("不含@");
 			flag=false;
 		}
-		if(str.indexOf('.')<0){
+		else if(str.indexOf('.')<0){
 			System.out.println("不含.");
 			flag=false;
 		}
-		if(str.indexOf('@')!=str.lastIndexOf('@')){
+		else if(str.indexOf('@')!=str.lastIndexOf('@')){
 			System.out.println("含有多个@");
 			flag=false;
 		}
-		if(str.indexOf('.')!=str.lastIndexOf('.')){
+		else if(str.indexOf('.')!=str.lastIndexOf('.')){
 			System.out.println("含有多个.");
 			flag=false;
 		}
-		if(str.indexOf('.')<str.indexOf('@')){
+		else if(str.indexOf('.')<str.indexOf('@')){
 			System.out.println(".出现在@之前");
 			flag=false;
 		}
