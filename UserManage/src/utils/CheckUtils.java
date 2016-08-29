@@ -65,8 +65,8 @@ public class CheckUtils {
 	}
 	/**
 	 * 检查用户角色
-	 * 若为1则admin
-	 * 若为2则user
+	 * 若admin返回权限1
+	 * 若user返回权限2
 	 * 否则重新输入
 	 * @param role
 	 * @return
